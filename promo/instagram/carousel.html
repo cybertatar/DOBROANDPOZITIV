@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>=Добро и позитив= — карусель</title>
+<style>
+  :root {
+    --ink: #4a2a10;
+    --ink-soft: #7a5432;
+    --accent: #ff7840;
+    --sun: #ffd65c;
+    --paper-top: #fff6de;
+    --paper-bottom: #ffe2c4;
+    --bubble-out: #fff;
+    --bubble-me: #ffe9a8;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body { background: #222; font-family: Inter, sans-serif; color: var(--ink); display: grid; gap: 40px; padding: 40px; justify-content: center; }
+
+  .slide {
+    width: 1080px; height: 1350px; padding: 104px 96px; position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
+    background: linear-gradient(var(--paper-top), var(--paper-bottom));
+  }
+  .slide.hot { background: linear-gradient(var(--sun), var(--accent)); }
+
+  h1 { font-weight: 800; font-size: 96px; line-height: 1.02; letter-spacing: -0.03em; }
+  h2 { font-weight: 800; font-size: 76px; line-height: 1.05; letter-spacing: -0.025em; }
+  p { font-size: 40px; line-height: 1.3; color: var(--ink-soft); font-weight: 500; }
+  .eq { color: var(--accent); }
+  .hot .eq { color: #fff; }
+
+  .swipe { margin-top: auto; font: 700 36px Inter; display: flex; align-items: center; gap: 16px; }
+
+  /* Сообщения */
+  .chat { display: flex; flex-direction: column; gap: 22px; }
+  .bubble {
+    align-self: flex-start; max-width: 80%; padding: 26px 34px; border-radius: 40px 40px 40px 12px;
+    background: var(--bubble-out); font: 500 40px/1.3 Inter; color: var(--ink);
+  }
+  .bubble.me { align-self: flex-end; border-radius: 40px 40px 12px 40px; background: var(--bubble-me); }
+  .tight .bubble { font-size: 36px; padding: 22px 30px; }
+  .bubble small { display: block; font: 600 26px Inter; color: var(--ink-soft); margin-bottom: 6px; }
+  .label { font: 700 30px Inter; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-soft); }
+
+  .field {
+    display: flex; align-items: center; gap: 20px; padding: 24px 28px 24px 40px; border-radius: 48px;
+    background: #fff; font: 500 40px Inter;
+  }
+  .field .caret { width: 3px; height: 48px; background: var(--accent); margin-left: -14px; }
+  .field .send { margin-left: auto; width: 76px; height: 76px; border-radius: 50%; background: var(--accent); display: grid; place-items: center; }
+  .key {
+    display: inline-flex; align-items: center; justify-content: center; min-width: 200px; height: 110px; padding: 0 40px;
+    border-radius: 24px; background: #fff; font: 700 44px Inter; color: var(--ink);
+  }
+  .arrow-down { width: 0; height: 0; border-left: 36px solid transparent; border-right: 36px solid transparent; border-top: 44px solid var(--accent); }
+
+  /* Строка меню */
+  .menubar {
+    margin: 0 -96px; height: 96px; background: rgba(255, 255, 255, .75); backdrop-filter: blur(20px);
+    display: flex; align-items: center; justify-content: flex-end; gap: 40px; padding: 0 48px;
+    font: 600 36px Inter; color: #1d1d1f;
+  }
+  .menubar .ours { display: flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 10px; background: rgba(0, 0, 0, .1); }
+  .menubar .dim { opacity: .35; background: none; }
+  .glyph-eq { display: inline-flex; flex-direction: column; gap: 6px; }
+  .glyph-eq i { display: block; width: 26px; height: 6px; background: currentColor; }
+  .menu {
+    align-self: flex-end; width: 760px; margin-top: 14px; margin-right: 24px; padding: 18px; border-radius: 24px;
+    background: rgba(255, 255, 255, .92); font: 500 44px Inter; color: #1d1d1f;
+  }
+  .menu div { padding: 22px 28px 22px 84px; border-radius: 14px; position: relative; }
+  .menu .on::before { content: "✓"; position: absolute; left: 30px; font-weight: 700; }
+  .menu .hover { background: #3b82f6; color: #fff; }
+  .menu hr { border: 0; height: 2px; background: rgba(0, 0, 0, .08); margin: 10px 18px; }
+
+  /* Списки */
+  .list { display: flex; flex-direction: column; gap: 28px; margin-top: 64px; }
+  .row { display: flex; align-items: center; gap: 32px; padding: 30px 36px; border-radius: 32px; background: rgba(255, 255, 255, .7); font: 600 40px/1.25 Inter; }
+  .row .badge { flex: none; width: 84px; height: 84px; border-radius: 24px; display: grid; place-items: center; font: 800 44px Inter; background: var(--accent); color: #fff; }
+  .row .badge.no { background: #ffe1cf; color: var(--accent); }
+  .row span { color: var(--ink-soft); font-weight: 500; display: block; font-size: 32px; margin-top: 4px; }
+
+  .apps { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 40px; }
+  .apps span { padding: 16px 28px; border-radius: 999px; background: #fff; font: 700 34px Inter; }
+
+  .url { margin-top: 32px; padding: 30px 36px; border-radius: 28px; background: #fff; font: 700 38px Inter; color: var(--ink); word-break: break-all; }
+</style>
+</head>
+<body>
+
+<!-- 1. Обложка -->
+<section class="slide hot">
+  <img src="icon.png" alt="" style="width:560px; margin:-20px auto 0; display:block">
+  <h1 style="text-align:center; color:#fff; font-size:104px; margin-top:12px;">=Добро и&nbsp;позитив=</h1>
+  <p style="text-align:center; color:#fff; font-size:44px; margin-top:28px; font-weight:600">Приложение для&nbsp;Mac, которое делает каждое ваше сообщение добрее</p>
+  <div class="swipe" style="color:#fff; justify-content:center">листай →</div>
+</section>
+
+<!-- 2. Как работает -->
+<section class="slide">
+  <h2>Пишешь как&nbsp;обычно.<br>Жмёшь <span class="eq">Enter</span>.</h2>
+  <div style="margin-top:72px; display:flex; flex-direction:column; gap:40px">
+    <div class="label">Ты набрал</div>
+    <div class="field">Всем привет, созвон в&nbsp;15:00<i class="caret"></i>
+      <span class="send"><svg width="36" height="36" viewBox="0 0 24 24" fill="#fff"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></span>
+    </div>
+    <div style="display:flex; align-items:center; gap:36px; margin:16px 0 0 8px">
+      <span class="key">Enter ⏎</span><div class="arrow-down"></div>
+    </div>
+    <div class="label">Ушло в&nbsp;чат</div>
+    <div class="chat"><div class="bubble me" style="align-self:flex-start; max-width:100%; font-size:46px"><b class="eq">=</b>Всем привет, созвон в&nbsp;15:00<b class="eq">=</b></div></div>
+  </div>
+  <p style="margin-top:auto">Знаки «=» по&nbsp;краям встают сами. Как&nbsp;в&nbsp;лучшие времена =Добра и&nbsp;позитива=.</p>
+</section>
+
+<!-- 3. Везде -->
+<section class="slide">
+  <h2>Работает везде, где&nbsp;есть <span class="eq">Enter</span></h2>
+  <div class="apps"><span>Telegram</span><span>WhatsApp</span><span>Slack</span><span>Discord</span><span>браузер</span></div>
+  <div class="chat tight" style="margin-top:64px; gap:16px">
+    <div class="bubble"><small>Начальник</small>=Где отчёт?=</div>
+    <div class="bubble me">=Будет к&nbsp;вечеру=</div>
+    <div class="bubble"><small>Мама</small>=Ты поел?=</div>
+    <div class="bubble me">=Да, мам=</div>
+    <div class="bubble"><small>Бывшая</small>=Нам надо поговорить=</div>
+    <div class="bubble me">=Всем добра и&nbsp;позитива!=</div>
+  </div>
+</section>
+
+<!-- 4. Строка меню -->
+<section class="slide" style="padding-top:0">
+  <div class="menubar">
+    <span>Ср 18&nbsp;окт.</span>
+    <span class="ours">
+      <span class="glyph-eq"><i></i><i></i></span>
+      <svg width="42" height="42" viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg>
+      <span class="glyph-eq"><i></i><i></i></span>
+    </span>
+    <span>9:41</span>
+  </div>
+  <div class="menu">
+    <div class="on hover">Добро и&nbsp;позитив</div>
+    <hr>
+    <div>Запускать при&nbsp;входе</div>
+    <hr>
+    <div>Выйти</div>
+  </div>
+  <h2 style="margin-top:auto">Включается одним кликом в&nbsp;строке меню</h2>
+  <div class="list" style="margin-top:48px">
+    <div class="row"><span class="badge">👍</span><div>Значок яркий<span>добро включено</span></div></div>
+    <div class="row" style="opacity:.6"><span class="badge no">👍</span><div>Значок бледный<span>можно писать без «=», если очень надо</span></div></div>
+  </div>
+</section>
+
+<!-- 5. С умом -->
+<section class="slide">
+  <h2>Добро, но&nbsp;<span class="eq">с&nbsp;умом</span></h2>
+  <p style="margin-top:28px">Приложение не&nbsp;трогает:</p>
+  <div class="list" style="margin-top:40px">
+    <div class="row"><span class="badge no">✕</span><div>Shift + Enter<span>перенос строки остаётся переносом</span></div></div>
+    <div class="row"><span class="badge no">✕</span><div>Пустые сообщения<span>«==» никому не нужно</span></div></div>
+    <div class="row"><span class="badge no">✕</span><div>Уже добрые сообщения<span>«==Привет==» не будет</span></div></div>
+    <div class="row"><span class="badge no">✕</span><div>Пароли, поиск и&nbsp;Терминал<span>там Enter нужен для&nbsp;другого</span></div></div>
+  </div>
+</section>
+
+<!-- 6. Установка -->
+<section class="slide">
+  <h2>Ставится за&nbsp;минуту</h2>
+  <div class="list">
+    <div class="row"><span class="badge">1</span><div>Скачай DOBROANDPOZITIV.dmg</div></div>
+    <div class="row"><span class="badge">2</span><div>Перетащи значок в&nbsp;Applications</div></div>
+    <div class="row"><span class="badge">3</span><div>Разреши «Универсальный доступ»<span>без него Mac не&nbsp;даёт увидеть нажатие Enter</span></div></div>
+  </div>
+  <div class="apps" style="margin-top:auto"><span>бесплатно</span><span>открытый код</span><span>macOS 13+</span></div>
+</section>
+
+<!-- 7. Финал -->
+<section class="slide hot" style="justify-content:center">
+  <h1 style="color:#fff; font-size:120px;">=Всем добра и&nbsp;позитива!=</h1>
+  <p style="color:#fff; font-weight:600; font-size:44px; margin-top:56px">Ссылка на&nbsp;скачивание в&nbsp;описании</p>
+  <div class="url">github.com/cybertatar/<wbr>DOBROANDPOZITIV</div>
+</section>
+
+</body>
+</html>

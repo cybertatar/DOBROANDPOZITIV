@@ -3,7 +3,8 @@
     pip install "rembg[cpu]" pillow
     python tools/make_icons.py фото.png
 
-Пишет Resources/AppIcon.png (1024×1024). Значок в строке меню рисует само приложение.
+Пишет Resources/AppIcon.png (1024×1024) и плоскую версию без теней
+promo/instagram/icon.png для карусели. Значок в строке меню рисует само приложение.
 """
 
 import sys
@@ -36,7 +37,7 @@ def equals(draw, cx, cy, width, bar, gap, fill, radius):
         draw.rounded_rectangle([cx - width / 2, cy + dy, cx + width / 2, cy + dy + bar], radius, fill=fill)
 
 
-def app_icon(person):
+def app_icon(person, out, flat=False):
     # Сетка иконок macOS: «сквиркл» 824×824 с полями 100px и тенью.
     size, body, inset = 1024, 824, 100
     tile = gradient((body, body), (255, 214, 92), (255, 120, 64)).convert("RGBA")
@@ -46,7 +47,8 @@ def app_icon(person):
     x, y = (body - p.width) // 2, body - p.height + 40
     shadow = Image.new("RGBA", tile.size, (0, 0, 0, 0))
     shadow.paste((90, 30, 0, 110), (x, y + 10), p.getchannel("A"))
-    tile.alpha_composite(shadow.filter(ImageFilter.GaussianBlur(14)))
+    if not flat:
+        tile.alpha_composite(shadow.filter(ImageFilter.GaussianBlur(14)))
     tile.alpha_composite(p, (x, y))
 
     # Знаки «=» по бокам от головы: человек сам стоит в =…=.
@@ -61,11 +63,13 @@ def app_icon(person):
     icon = Image.new("RGBA", (size, size), (0, 0, 0, 0))
     drop = Image.new("RGBA", (size, size), (0, 0, 0, 0))
     drop.paste((0, 0, 0, 90), (inset, inset + 12), mask)
-    icon.alpha_composite(drop.filter(ImageFilter.GaussianBlur(18)))
+    if not flat:
+        icon.alpha_composite(drop.filter(ImageFilter.GaussianBlur(18)))
     icon.alpha_composite(tile, (inset, inset))
-    icon.save(OUT / "AppIcon.png")
+    icon.save(out)
 
 
 if __name__ == "__main__":
     person = cut_out(sys.argv[1])
-    app_icon(person)
+    app_icon(person, OUT / "AppIcon.png")
+    app_icon(person, OUT.parent / "promo" / "instagram" / "icon.png", flat=True)
